@@ -4,10 +4,10 @@
   "doctype": "Client Script",
   "dt": "Sales Order",
   "enabled": 1,
-  "modified": "2024-09-13 10:22:50.798637",
+  "modified": "2024-09-13 12:20:03.538244",
   "module": "Karp Communication",
   "name": "Order Ready Script",
-  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Ord Ready Msg'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Order Ready'\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
+  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Send Ord Ready Msg'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Order Ready'\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
   "view": "Form"
  },
  {
@@ -15,10 +15,10 @@
   "doctype": "Client Script",
   "dt": "Sales Order",
   "enabled": 1,
-  "modified": "2024-09-13 11:37:01.090817",
+  "modified": "2024-09-13 12:20:22.194021",
   "module": "Karp Communication",
   "name": "Share Invoice",
-  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Share Invoice'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Share Invoice'\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
+  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Send Invoice Msg'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Share Invoice'\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
   "view": "Form"
  },
  {
