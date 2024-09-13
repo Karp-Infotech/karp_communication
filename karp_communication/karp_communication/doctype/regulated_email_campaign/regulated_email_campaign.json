@@ -1,0 +1,96 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "prompt",
+ "creation": "2024-09-10 14:40:32.701985",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "target",
+  "email_template",
+  "sender",
+  "column_break_vzqj",
+  "start_date",
+  "end_date",
+  "batch_size",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "target",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Target",
+   "options": "Lead\nContact\nEmail Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email_template",
+   "fieldtype": "Link",
+   "label": "Email Template",
+   "options": "Email Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sender",
+   "fieldtype": "Link",
+   "label": "Sender",
+   "options": "Email Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vzqj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "batch_size",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Batch Size",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nPaused\nFinished\nCanceled",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-12 09:38:56.192201",
+ "modified_by": "Administrator",
+ "module": "Karp Communication",
+ "name": "Regulated Email Campaign",
+ "naming_rule": "Set by user",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
