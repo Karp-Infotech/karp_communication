@@ -9,11 +9,12 @@
   "target",
   "email_template",
   "sender",
-  "column_break_vzqj",
   "start_date",
+  "column_break_vzqj",
   "end_date",
   "batch_size",
-  "status"
+  "status",
+  "mode"
  ],
  "fields": [
   {
@@ -66,11 +67,19 @@
    "label": "Status",
    "options": "Draft\nActive\nPaused\nFinished\nCanceled",
    "reqd": 1
+  },
+  {
+   "default": "Test",
+   "fieldname": "mode",
+   "fieldtype": "Select",
+   "label": "Mode",
+   "options": "Live\nTest",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 09:38:56.192201",
+ "modified": "2024-09-13 21:27:12.423579",
  "modified_by": "Administrator",
  "module": "Karp Communication",
  "name": "Regulated Email Campaign",
