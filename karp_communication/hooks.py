@@ -166,7 +166,7 @@ scheduler_events = {
 # 	],
     "cron": {
         "*/4 * * * *": [
-            "karp_communication.scheduled_tasks.send_marketing_emails"
+            "karp_communication.scheduled_tasks_new.send_marketing_emails"
         ]
     }
  }
