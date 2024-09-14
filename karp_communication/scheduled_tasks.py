@@ -2,10 +2,8 @@ import frappe
 from frappe.core.doctype.communication.email import make
 
 def send_marketing_emails():
-
-    frappe.log_error("Inside send_marketing_emails")
     
-    email_campaign = frappe.get_doc('Regulated Email Campaign',"Outreach")
+    email_campaign = frappe.get_doc('Regulated Email Campaign',"Introduction")
 
     if email_campaign.status == "Active":
         print("Active")
@@ -15,9 +13,9 @@ def send_marketing_emails():
         batch_size = email_campaign.batch_size
 
         if email_campaign.mode == "Live":
-            leads = frappe.get_all('Lead', filters={'outreach_email_status': 'Pending'}, limit=10)
+            leads = frappe.get_all('Lead', filters={'custom_intro_email_status': 'Pending'}, limit=10)
         else:
-            leads = frappe.get_all('Lead', filters={'outreach_email_status': 'Test'}, limit=10)     
+            leads = frappe.get_all('Lead', filters={'custom_intro_email_status': 'Test'}, limit=10)     
 
         for lead in leads:
             print("Lead Name: " + lead.name)
@@ -31,7 +29,7 @@ def send_marketing_emails():
                     communication_medium="Email",
                     send_email=True
                 )
-                lead_doc.outreach_email_status="Sent"
+                lead_doc.custom_intro_email_status="Sent"
                 lead_doc.save()
                 frappe.db.commit() 
 
