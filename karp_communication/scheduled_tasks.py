@@ -11,7 +11,9 @@ def send_marketing_emails():
         email_template =  frappe.get_doc("Email Template", email_campaign.email_template)
 
         batch_size = email_campaign.batch_size
-
+        print("Batch Size:")
+        print(batch_size)
+        
         if email_campaign.mode == "Live":
             leads = frappe.get_all('Lead', filters={'custom_intro_email_status': 'Pending'}, limit=batch_size)
         else:
