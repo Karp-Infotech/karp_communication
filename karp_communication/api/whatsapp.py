@@ -27,14 +27,14 @@ def build_context(wa_template_name, customer_name, contact_doc):
     if(wa_template_name == "Thankyou Msg"):
         loyalty_points = int(get_total_loyalty_points_for_customer(customer_name))
         context = {
-            "first_name": contact_doc.first_name,
+            "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer",
             "loyalty_points": loyalty_points
         }
         return context
         
     else: 
         context = {
-            "first_name": contact_doc.first_name
+            "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer",
         }
         return context
 
