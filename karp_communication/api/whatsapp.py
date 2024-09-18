@@ -34,7 +34,7 @@ def build_context(wa_template_name, customer_name, contact_doc):
         
     else: 
         context = {
-            "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer",
+            "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer"
         }
         return context
 
