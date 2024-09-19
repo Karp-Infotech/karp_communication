@@ -5,6 +5,7 @@ def get_wa_link(customer_name, wa_template_name):
 
     wa_url = "https://wa.me/";    
     contact_doc = get_contact_for_customer(customer_name)
+    print("Building WA Msg for :" + contact_doc.first_name)
     wa_url = wa_url + contact_doc.mobile_no
     message = construct_message(wa_template_name, customer_name, contact_doc)
     wa_url = wa_url + "?text=" + message
