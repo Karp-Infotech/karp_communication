@@ -12,7 +12,7 @@ def get_wa_link(customer_name, wa_template_name):
     contact_doc = get_contact_for_customer(customer_name)
     logger.info('Gettting WA Message')
     wa_url = wa_url + contact_doc.mobile_no
-    #message = construct_message(wa_template_name, customer_name, contact_doc)
+    message = construct_message(wa_template_name, customer_name, contact_doc)
     wa_url = wa_url + "?text=" + message
 
     return wa_url
