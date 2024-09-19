@@ -1,13 +1,18 @@
 import frappe
+import logging
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
 
 @frappe.whitelist()
 def get_wa_link(customer_name, wa_template_name):
 
     wa_url = "https://wa.me/";    
     contact_doc = get_contact_for_customer(customer_name)
-    print("Building WA Msg for :" + contact_doc.first_name)
+    logger.info('Gettting WA Message')
     wa_url = wa_url + contact_doc.mobile_no
-    message = construct_message(wa_template_name, customer_name, contact_doc)
+    #message = construct_message(wa_template_name, customer_name, contact_doc)
     wa_url = wa_url + "?text=" + message
 
     return wa_url
