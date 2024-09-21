@@ -137,13 +137,16 @@ app_license = "unlicense"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+doc_events = {
 # 	"*": {
 # 		"on_update": "method",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 # 	}
-# }
+    "Sales Order": {
+        "on_submit": "karp_communication.api.communication.create_communication_status"
+    }
+ }
 
 # Scheduled Tasks
 # ---------------
@@ -252,3 +255,7 @@ fixtures = [
     "Property Setter",
     "Client Script"
 ]
+
+app_include_urls = {
+    "karp_communication.api.communication.get_cust_for_welcome_msg"
+}

@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2024-09-20 22:32:20.512866",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "welcome_msg_status",
+  "order_ready_msg_status",
+  "thankyou_msg_status",
+  "sales_order"
+ ],
+ "fields": [
+  {
+   "default": "Not Sent",
+   "fieldname": "welcome_msg_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Welcome Msg Status",
+   "options": "Not Sent\nSent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "reqd": 1
+  },
+  {
+   "default": "Not Sent",
+   "fieldname": "order_ready_msg_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Order Ready Msg Status",
+   "options": "Not Sent\nSent",
+   "reqd": 1
+  },
+  {
+   "default": "Not Sent",
+   "fieldname": "thankyou_msg_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Thankyou Msg Status",
+   "options": "Not Sent\nSent",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-20 22:44:31.217862",
+ "modified_by": "Administrator",
+ "module": "Karp Communication",
+ "name": "Communication Status",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

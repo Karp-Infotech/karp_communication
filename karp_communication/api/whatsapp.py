@@ -8,12 +8,12 @@ logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging
 @frappe.whitelist()
 def get_wa_link(customer_name, wa_template_name):
 
-    wa_url = "https://wa.me/";    
+    wa_url = "https://web.whatsapp.com/send/?type=phone_number&app_absent=0&";    
     contact_doc = get_contact_for_customer(customer_name)
-    logger.info('Gettting WA Message')
-    wa_url = wa_url + contact_doc.mobile_no
+    #logger.info('Gettting WA Message')
+    wa_url = wa_url + "phone="+contact_doc.mobile_no
     message = construct_message(wa_template_name, customer_name, contact_doc)
-    wa_url = wa_url + "?text=" + message
+    wa_url = wa_url + "&text=" + message
 
     return wa_url
 

@@ -5,3 +5,8 @@
 tags
 node_modules
 __pycache__
+karp_communication/karp_communication/doctype/communication_statuses/communication_statuses.js
+karp_communication/karp_communication/doctype/communication_statuses/communication_statuses.json
+karp_communication/karp_communication/doctype/communication_statuses/communication_statuses.py
+karp_communication/karp_communication/doctype/communication_statuses/test_communication_statuses.py
+karp_communication/karp_communication/doctype/communication_statuses/__init__.py
