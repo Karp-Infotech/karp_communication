@@ -7,21 +7,33 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
 
 @frappe.whitelist()
-def get_cust_for_welcome_msg():
+def get_data_for_welcome_msg():
 
-    welcome_wa_template =  contact_doc = frappe.get_doc('WA Template', "Welcome Message")
+    welcome_wa_template = frappe.get_doc('WA Template', "Welcome Message")
     message_template =  welcome_wa_template.message_template
-    customer_data = build_customer_json()
+    customers = get_customers_with_pending_sales_orders()
+    customer_data = build_customer_json(customers)
     response_json = {
         "message_template": message_template,
         "customer_data": customer_data
     }
     return response_json
 
+@frappe.whitelist()
+def get_data_for_thankyou_msg():
+
+    thankyou_wa_template = frappe.get_doc('WA Template', "Thankyou Msg")
+    message_template =  thankyou_wa_template.message_template
+    customers = get_customers_with_completed_sales_orders()
+    customer_data = build_customer_json(customers)
+    response_json = {
+        "message_template": message_template,
+        "customer_data": customer_data
+    }
+    return response_json
 
     
-def build_customer_json():
-    customers = get_customers_with_pending_sales_orders()
+def build_customer_json(customers):
     
     customer_list = []
     
@@ -32,11 +44,12 @@ def build_customer_json():
         
         # Assume mobile number is stored in 'mobile_no' field in the customer document
         mobile_number = contact_doc.mobile_no if contact_doc.mobile_no else "N/A"
-        
+
         # Build the JSON object for each customer
         customer_data = {
             "First Name": contact_doc.first_name,
             "Mobile Number": mobile_number,
+            "Loyalty Points":get_total_loyalty_points_for_customer(customer.get("customer")),
             "Sales Order": customer.get("sales_order")
         }
         
@@ -54,6 +67,16 @@ def get_customers_with_pending_sales_orders():
         SELECT so.customer, so.name
         FROM `tabSales Order` so, `tabCommunication Status` cs
         WHERE so.name = cs.sales_order and so.status IN ('To Deliver and Bill', 'To Bill') and cs.welcome_msg_status = 'Not Sent'
+    """, as_dict=True)
+    
+    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name']} for cust_so in customers_sales_order]
+
+def get_customers_with_completed_sales_orders():
+    # Query to get customers with Sales Orders in "To Deliver and Bill" or "To Bill" status
+    customers_sales_order = frappe.db.sql("""
+        SELECT so.customer, so.name
+        FROM `tabSales Order` so, `tabCommunication Status` cs
+        WHERE so.name = cs.sales_order and so.status = 'Completed' and cs.thankyou_msg_status = 'Not Sent'
     """, as_dict=True)
     
     return [{'customer': cust_so['customer'], 'sales_order': cust_so['name']} for cust_so in customers_sales_order]
@@ -93,7 +116,8 @@ def update_communication_status():
         
     # Parse the incoming JSON data
     json_com_status_list = frappe.request.get_json()
-    print(frappe.request.get_json())
+    print("Updating Status")
+    print(json_com_status_list)
 
     return_status = []
     
@@ -114,6 +138,11 @@ def update_communication_status():
                 if(com_status.get("welcome_msg_status")):
                     
                     communication_doc.welcome_msg_status = com_status.get("welcome_msg_status")
+
+                if(com_status.get("thankyou_msg_status")):
+                    
+                    communication_doc.thankyou_msg_status = com_status.get("thankyou_msg_status")
+
 
                 # Save the changes to the database
                 communication_doc.save()
@@ -137,3 +166,14 @@ def update_communication_status():
     return return_status
 
     
+def get_total_loyalty_points_for_customer(customer_name):
+    query = """
+        SELECT SUM(loyalty_points) as total_loyalty_points
+        FROM `tabLoyalty Point Entry`
+        WHERE customer = %s
+    """ 
+    # Execute the query with customer_name as the parameter
+    result = frappe.db.sql(query, customer_name)
+
+    # Return the total loyalty points, or 0 if no record is found
+    return int(result[0][0] if result and result[0][0] else 0)
