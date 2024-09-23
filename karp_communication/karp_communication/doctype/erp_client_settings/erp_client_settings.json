@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-23 10:21:57.845600",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "chrome_profile_location",
+  "chrome_driver_path",
+  "wa_web_url",
+  "store",
+  "wa_automation_mode"
+ ],
+ "fields": [
+  {
+   "fieldname": "chrome_profile_location",
+   "fieldtype": "Data",
+   "label": "Chrome Profile Location"
+  },
+  {
+   "fieldname": "chrome_driver_path",
+   "fieldtype": "Data",
+   "label": "Chrome Driver Path"
+  },
+  {
+   "fieldname": "wa_web_url",
+   "fieldtype": "Data",
+   "label": "WA Web URL"
+  },
+  {
+   "fieldname": "store",
+   "fieldtype": "Select",
+   "label": "Store",
+   "options": "Sect 14 Gurgaon\nMaruti Vihar Gurgaon\nLKS ITO Delhi\nLKS MG Road Gurgaon"
+  },
+  {
+   "default": "Headless",
+   "fieldname": "wa_automation_mode",
+   "fieldtype": "Select",
+   "label": "WA Automation Mode",
+   "options": "GUI\nHeadless"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-09-23 10:29:16.622927",
+ "modified_by": "Administrator",
+ "module": "Karp Communication",
+ "name": "ERP Client Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
