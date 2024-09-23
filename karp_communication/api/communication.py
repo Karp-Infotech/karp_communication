@@ -3,8 +3,8 @@ import logging
 import json
 import urllib.parse
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
+#logger = logging.getLogger(__name__)
+#logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
 
 @frappe.whitelist()
 def get_data_for_welcome_msg():
