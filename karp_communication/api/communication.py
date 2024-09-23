@@ -108,25 +108,18 @@ def get_contact_for_customer(customer_name):
         return contact_doc
     else:
         return None
-    
-
 
 @frappe.whitelist()
 def update_communication_status():
         
     # Parse the incoming JSON data
     json_com_status_list = frappe.request.get_json()
-    print("Updating Status")
-    print(json_com_status_list)
 
     return_status = []
     
-
     for com_status in json_com_status_list:
         sales_order = com_status.get("sales_order")
         try:
-            # Extract fields from the JSON         
-            print("Sales Order" + sales_order)
 
             # Fetch the Customer Communication document using communication_id
             communication_doc = frappe.get_doc(
