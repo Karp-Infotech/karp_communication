@@ -64,5 +64,16 @@
   "name": "Order Ready Script - SI",
   "script": "frappe.ui.form.on('Sales Invoice', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Ord Ready Msg'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Order Ready'\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Eye Camp Lead",
+  "enabled": 1,
+  "modified": "2024-10-01 19:28:19.544526",
+  "module": "Karp Communication",
+  "name": "Eye Camp Outreach",
+  "script": "frappe.ui.form.on('Eye Camp Lead', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Send Outreach Msg'), function() {\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link_for_eye_camp_marketing',\n                    args: {\n                        id: frm.doc.name\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
+  "view": "Form"
  }
 ]

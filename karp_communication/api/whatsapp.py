@@ -18,6 +18,7 @@ def get_wa_link(customer_name, wa_template_name):
     return wa_url
 
 
+
 def construct_message(wa_template_name, customer_name, contact_doc):
 
     wa_template = frappe.get_doc("WA Template", {"name": wa_template_name})
@@ -75,3 +76,19 @@ def get_total_loyalty_points_for_customer(customer_name):
     # Return the total loyalty points, or 0 if no record is found
     return result[0][0] if result and result[0][0] else 0
 
+@frappe.whitelist()
+def get_wa_link_for_eye_camp_marketing(id):
+
+    wa_url = "https://web.whatsapp.com/send/?type=phone_number&app_absent=0&";    
+    eye_camp_lead = frappe.get_doc("Eye Camp Lead", id)
+    #logger.info('Gettting WA Message')
+    wa_url = wa_url + "phone="+eye_camp_lead.mobile_number
+    wa_template = frappe.get_doc("WA Template", {"name": "Eye Camp Outreach Message"})
+    context = {
+        "first_name": eye_camp_lead.first_name if (len(eye_camp_lead.first_name) != 0) else "Customer",
+    }
+
+    message = frappe.render_template(wa_template.message_template, context)
+    wa_url = wa_url + "&text=" + message
+
+    return wa_url
