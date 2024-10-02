@@ -1,6 +1,6 @@
 import frappe
 import logging
-
+import urllib.parse
 
 #logger = logging.getLogger(__name__)
 #logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
@@ -25,7 +25,7 @@ def construct_message(wa_template_name, customer_name, contact_doc):
 
     context = build_context(wa_template_name, customer_name, contact_doc)
 
-    message = frappe.render_template(wa_template.message_template, context)
+    message = urllib.parse.quote(frappe.render_template(wa_template.message_template, context))
 
     return message
 
@@ -88,7 +88,7 @@ def get_wa_link_for_eye_camp_marketing(id):
         "first_name": eye_camp_lead.first_name if (len(eye_camp_lead.first_name) != 0) else "Customer",
     }
 
-    message = frappe.render_template(wa_template.message_template, context)
+    message = urllib.parse.quote(frappe.render_template(wa_template.message_template, context))
     wa_url = wa_url + "&text=" + message
 
     return wa_url
