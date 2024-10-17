@@ -44,6 +44,9 @@ def get_data_order_ready_for__msg():
     return response_json
 
 def build_customer_json(customers):
+
+    frappe.logger().debug("Customers : ")
+    frappe.logger().debug(customers)
     
     customer_list = []
     
@@ -51,21 +54,21 @@ def build_customer_json(customers):
     for customer in customers:
         
         contact_doc = get_contact_for_customer(customer.get("customer"))
-        
-        # Assume mobile number is stored in 'mobile_no' field in the customer document
-        mobile_number = contact_doc.mobile_no if contact_doc.mobile_no else "N/A"
+        if contact_doc is not None:
+            # Assume mobile number is stored in 'mobile_no' field in the customer document
+            mobile_number = contact_doc.mobile_no if contact_doc.mobile_no else "N/A"
 
-        # Build the JSON object for each customer
-        customer_data = {
-            "First Name": contact_doc.first_name,
-            "Mobile Number": mobile_number,
-            "Loyalty Points":get_total_loyalty_points_for_customer(customer.get("customer")),
-            "Sales Order": customer.get("sales_order"),
-            "Store": customer.get("store")
-        }
-        
-        # Add to the list
-        customer_list.append(customer_data)
+            # Build the JSON object for each customer
+            customer_data = {
+                "First Name": contact_doc.first_name,
+                "Mobile Number": mobile_number,
+                "Loyalty Points":get_total_loyalty_points_for_customer(customer.get("customer")),
+                "Sales Order": customer.get("sales_order"),
+                "Store": customer.get("store")
+            }
+            
+            # Add to the list
+            customer_list.append(customer_data)
     
     # Convert the list to JSON format
     customer_json = json.dumps(customer_list, indent=4)
