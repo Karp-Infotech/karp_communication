@@ -21,7 +21,6 @@ def get_data_for_welcome_msg():
 
 @frappe.whitelist()
 def get_data_for_thankyou_msg():
-
     thankyou_wa_template = frappe.get_doc('WA Template', "Thankyou Msg")
     message_template =  thankyou_wa_template.message_template
     customers = get_customers_with_completed_sales_orders()
@@ -32,7 +31,18 @@ def get_data_for_thankyou_msg():
     }
     return response_json
 
-    
+@frappe.whitelist()
+def get_data_order_ready_for__msg():
+    order_ready_wa_template = frappe.get_doc('WA Template', "Order Ready Msg")
+    message_template =  order_ready_wa_template.message_template
+    customers = get_customers_with_order_ready_sales_orders()
+    customer_data = build_customer_json(customers)
+    response_json = {
+        "message_template": message_template,
+        "customer_data": customer_data
+    }
+    return response_json
+
 def build_customer_json(customers):
     
     customer_list = []
@@ -50,7 +60,8 @@ def build_customer_json(customers):
             "First Name": contact_doc.first_name,
             "Mobile Number": mobile_number,
             "Loyalty Points":get_total_loyalty_points_for_customer(customer.get("customer")),
-            "Sales Order": customer.get("sales_order")
+            "Sales Order": customer.get("sales_order"),
+            "Store": customer.get("store")
         }
         
         # Add to the list
@@ -64,22 +75,34 @@ def build_customer_json(customers):
 def get_customers_with_pending_sales_orders():
     # Query to get customers with Sales Orders in "To Deliver and Bill" or "To Bill" status
     customers_sales_order = frappe.db.sql("""
-        SELECT so.customer, so.name
+        SELECT so.customer, so.name, so.set_warehouse
         FROM `tabSales Order` so, `tabCommunication Status` cs
         WHERE so.name = cs.sales_order and so.status IN ('To Deliver and Bill', 'To Bill') and cs.welcome_msg_status = 'Not Sent'
     """, as_dict=True)
     
-    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name']} for cust_so in customers_sales_order]
+    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name'], 'store': cust_so['set_warehouse'], } for cust_so in customers_sales_order]
 
 def get_customers_with_completed_sales_orders():
     # Query to get customers with Sales Orders in "To Deliver and Bill" or "To Bill" status
     customers_sales_order = frappe.db.sql("""
-        SELECT so.customer, so.name
+        SELECT so.customer, so.name, so.set_warehouse
         FROM `tabSales Order` so, `tabCommunication Status` cs
         WHERE so.name = cs.sales_order and so.status = 'Completed' and cs.thankyou_msg_status = 'Not Sent'
     """, as_dict=True)
     
-    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name']} for cust_so in customers_sales_order]
+    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name'], 'store': cust_so['set_warehouse']} for cust_so in customers_sales_order]
+
+def get_customers_with_order_ready_sales_orders():
+    # Query to get customers with Sales Orders in "To Deliver and Bill" or "To Bill" status
+    customers_sales_order = frappe.db.sql("""
+        SELECT so.customer, so.name, so.set_warehouse
+        FROM `tabSales Order` so, `tabCommunication Status` cs
+        WHERE so.name = cs.sales_order and so.status = 'To Bill' and cs.order_ready_msg_status = 'Not Sent'
+    """, as_dict=True)
+    
+    return [{'customer': cust_so['customer'], 'sales_order': cust_so['name'], 'store': cust_so['set_warehouse']} for cust_so in customers_sales_order]
+
+
 
 #This method creates initial communication status with default values in db when new Sales Order is created.
 def create_communication_status(doc, method):
@@ -135,6 +158,11 @@ def update_communication_status():
                 if(com_status.get("thankyou_msg_status")):
                     
                     communication_doc.thankyou_msg_status = com_status.get("thankyou_msg_status")
+                
+                if(com_status.get("order_ready_msg_status")):
+                    
+                    communication_doc.order_ready_msg_status = com_status.get("order_ready_msg_status")
+
 
 
                 # Save the changes to the database
