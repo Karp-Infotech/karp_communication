@@ -32,7 +32,7 @@ def get_data_for_thankyou_msg():
     return response_json
 
 @frappe.whitelist()
-def get_data_order_ready_for__msg():
+def get_data_for_order_ready_msg():
     order_ready_wa_template = frappe.get_doc('WA Template', "Order Ready Msg")
     message_template =  order_ready_wa_template.message_template
     customers = get_customers_with_order_ready_sales_orders()
