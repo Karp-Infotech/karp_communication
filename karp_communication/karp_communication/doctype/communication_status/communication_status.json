@@ -17,7 +17,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Welcome Msg Status",
-   "options": "Not Sent\nSent",
+   "options": "Not Sent\nSent\nError",
    "reqd": 1
   },
   {
@@ -34,7 +34,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Order Ready Msg Status",
-   "options": "Not Sent\nSent",
+   "options": "Not Sent\nSent\nError",
    "reqd": 1
   },
   {
@@ -43,13 +43,13 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Thankyou Msg Status",
-   "options": "Not Sent\nSent",
+   "options": "Not Sent\nSent\nError",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-20 22:44:31.217862",
+ "modified": "2024-10-19 10:30:44.159008",
  "modified_by": "Administrator",
  "module": "Karp Communication",
  "name": "Communication Status",
