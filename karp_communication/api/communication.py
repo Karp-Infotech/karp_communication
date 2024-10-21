@@ -2,6 +2,7 @@ import frappe
 import logging
 import json
 import urllib.parse
+from datetime import date
 
 #logger = logging.getLogger(__name__)
 #logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
@@ -201,3 +202,137 @@ def get_total_loyalty_points_for_customer(customer_name):
 
     # Return the total loyalty points, or 0 if no record is found
     return int(result[0][0] if result and result[0][0] else 0)
+
+
+
+@frappe.whitelist()
+def get_active_wa_marketing_campaigns():
+    wa_campaigns = frappe.get_all(
+        'WA Campaign',
+        filters={
+            'status': 'Active'
+        },
+        fields=['*'],
+        ignore_permissions=True
+    )
+    campaign_list = []
+    for campaign in wa_campaigns:
+       campaign_list.append(build_campaign_json(campaign))
+    return campaign_list
+
+
+def build_campaign_json(campaign):
+    wa_template = frappe.get_doc('WA Template', campaign.get("wa_msg_template"))
+    return {
+        "Campaign Name": campaign.get("name1"),
+        "Campaign Id": campaign.get("name"),
+        "WA Message": wa_template.get("message_template"),
+        "Store": campaign.get("store"),
+        "Customers": build_customer_data_json(campaign)
+	}
+
+def build_customer_data_json(campaign):
+
+    customer_query = campaign.get("cust_selection_query")
+    customers = []
+
+    query_params = [
+            campaign.get("name"), 
+            campaign.get("start_date")
+        ]
+    if campaign.get("store"):
+        query_params.append(campaign.get("store"))
+
+    query_params.append(campaign.get("msg_count_per_run"))
+    
+    customers = frappe.db.sql(customer_query, query_params, as_dict=True)
+
+    return build_customers_json_for_marketing_campaign(customers)
+
+
+
+def build_customers_json_for_marketing_campaign(customers):
+
+    customer_list = []
+    
+    # Iterate over the customers and fetch the Mobile Number from the 'Customer' document
+    for customer in customers:
+        
+        contact_doc = get_contact_for_customer(customer.get("name"))
+
+        if contact_doc is not None:
+            # Assume mobile number is stored in 'mobile_no' field in the customer document
+            mobile_number = contact_doc.mobile_no if contact_doc.mobile_no else "N/A"
+
+            # Build the JSON object for each customer
+            customer_data = {
+                "First Name": contact_doc.first_name,
+                "Mobile Number": mobile_number,
+                "Customer Name": customer.get("name")
+            }
+            
+            # Add to the list
+            customer_list.append(customer_data)
+    
+    # Convert the list to JSON format
+    customers_json = json.dumps(customer_list, indent=4)
+    
+    return customers_json
+
+
+@frappe.whitelist()
+def update_cust_campaign_inc_on_server():
+        
+    # Parse the incoming JSON data
+    json_cust_campaign_inc_list = frappe.request.get_json()
+    return_status = None
+    for cust_campaign_inc in json_cust_campaign_inc_list:
+
+        cust = cust_campaign_inc.get("Customer")
+        campaign = cust_campaign_inc.get("Campaign")
+
+        try:
+
+            
+            # Fetch the Customer Communication document using communication_id
+            cust_campaign_inc_doc_name = frappe.get_value('Cust WA Campaign Inclusion', {
+                'wa_campaign': campaign,
+                'customer': cust
+            })
+            cust_campaign_inc_doc = None
+            if cust_campaign_inc_doc_name:
+                cust_campaign_inc_doc = frappe.get_doc('Cust WA Campaign Inclusion', cust_campaign_inc_doc_name)
+
+            if(cust_campaign_inc_doc):
+                
+                contacted_counts = cust_campaign_inc_doc.get("total_contacted_count")
+
+                contacted_counts = contacted_counts + 1
+
+                cust_campaign_inc_doc.total_contacted_count = contacted_counts
+
+                cust_campaign_inc_doc.last_contacted = date.today()
+
+                # Save the changes to the database
+                cust_campaign_inc_doc.save()
+
+            else:
+                cust_campaign_inc_doc = frappe.get_doc({
+                    "doctype": "Cust WA Campaign Inclusion",
+                    "customer": cust,  
+                    "wa_campaign": campaign,
+                    "last_contacted": date.today(),
+                    "total_contacted_count": 1
+                })
+                cust_campaign_inc_doc.insert(ignore_permissions=True) 
+            # Commit the transaction to ensure it's saved
+            
+            return_status = {'Status': "Success", "message": "Customer Campaign Inclusion updated/inserted successfully"}
+        except Exception as e:
+            # Handle exceptions and return an error message
+            frappe.log_error(frappe.get_traceback(), "Update / Insert to Cust WA Campaign Inclusion Failed")
+            print(frappe.get_traceback() + "Update / Insert to Cust WA Campaign Inclusion Failed")
+            return_status = {'Status': "Failure", "message": "Customer Campaign Inclusion updated/inserted failed"}
+    frappe.db.commit()
+
+    return return_status

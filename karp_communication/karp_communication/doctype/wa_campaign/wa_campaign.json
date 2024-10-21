@@ -1,24 +1,74 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "autoincrement",
  "creation": "2024-10-18 16:00:24.029185",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_4u5z"
+  "name1",
+  "store",
+  "wa_msg_template",
+  "cust_selection_query",
+  "msg_count_per_run",
+  "start_date",
+  "status"
  ],
  "fields": [
   {
-   "fieldname": "section_break_4u5z",
-   "fieldtype": "Section Break"
+   "fieldname": "store",
+   "fieldtype": "Link",
+   "label": "Store",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "wa_msg_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "WA Msg Template",
+   "options": "WA Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cust_selection_query",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Cust Selection Query",
+   "reqd": 1
+  },
+  {
+   "fieldname": "msg_count_per_run",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Msg Count Per Run",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nActive\nFinished\nPaused\nCanceled",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-18 16:00:24.029185",
+ "modified": "2024-10-21 10:37:37.581960",
  "modified_by": "Administrator",
  "module": "Karp Communication",
  "name": "WA Campaign",
+ "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
   {
@@ -34,7 +84,10 @@
    "write": 1
   }
  ],
+ "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "name1"
 }

@@ -1,0 +1,69 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2024-10-19 12:44:02.197765",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "wa_campaign",
+  "customer",
+  "last_contacted",
+  "total_contacted_count"
+ ],
+ "fields": [
+  {
+   "fieldname": "wa_campaign",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "WA Campaign",
+   "options": "WA Campaign",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_contacted",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Last Contacted",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_contacted_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Contacted Count"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-21 10:36:52.814483",
+ "modified_by": "Administrator",
+ "module": "Karp Communication",
+ "name": "Cust WA Campaign Inclusion",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
