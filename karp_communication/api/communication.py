@@ -224,8 +224,7 @@ def get_active_wa_marketing_campaigns():
 def build_campaign_json(campaign):
     wa_template = frappe.get_doc('WA Template', campaign.get("wa_msg_template"))
     return {
-        "Campaign Name": campaign.get("name1"),
-        "Campaign Id": campaign.get("name"),
+        "Campaign Name": campaign.get("name"),
         "WA Message": wa_template.get("message_template"),
         "Store": campaign.get("store"),
         "Customers": build_customer_data_json(campaign)
