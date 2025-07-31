@@ -73,7 +73,6 @@ def build_customer_json(customers):
     
     # Convert the list to JSON format
     customer_json = json.dumps(customer_list, indent=4)
-    
     return customer_json
 
 def get_customers_with_pending_sales_orders():
@@ -128,13 +127,17 @@ def get_contact_for_customer(customer_name):
         fields=['parent'],
         ignore_permissions=True
     )
-    if linked_contacts:
+    for contact in linked_contacts:
         # Get the contact name from the result
         contact_name = linked_contacts[0]['parent']
-        contact_doc = frappe.get_doc('Contact', contact_name)
-        return contact_doc
-    else:
-        return None
+        if frappe.db.exists("Contact", contact_name):
+            try:
+                contact_doc = frappe.get_doc('Contact', contact_name)
+                return contact_doc
+            except frappe.DoesNotExistError:
+                frappe.log_error(f"Linked contact '{contact_name}' for customer '{customer_name}' does not exist.", "Missing Contact")
+                continue  # move to next linked contact
+    return None # No valid contact found
 
 @frappe.whitelist()
 def update_communication_status():
