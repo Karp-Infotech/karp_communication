@@ -118,26 +118,47 @@ def create_communication_status(doc, method):
 
 
 def get_contact_for_customer(customer_name):
-    linked_contacts = frappe.get_all(
-        'Dynamic Link',
-        filters={
-            'link_doctype': 'Customer',
-            'link_name': customer_name
-        },
-        fields=['parent'],
-        ignore_permissions=True
-    )
-    for contact in linked_contacts:
-        # Get the contact name from the result
-        contact_name = linked_contacts[0]['parent']
-        if frappe.db.exists("Contact", contact_name):
-            try:
-                contact_doc = frappe.get_doc('Contact', contact_name)
-                return contact_doc
-            except frappe.DoesNotExistError:
-                frappe.log_error(f"Linked contact '{contact_name}' for customer '{customer_name}' does not exist.", "Missing Contact")
-                continue  # move to next linked contact
+
+    primary_contact = get_primary_contact_for_customer(customer_name)
+    if(primary_contact != None) :
+        return primary_contact
+    else :
+        linked_contacts = frappe.get_all(
+            'Dynamic Link',
+            filters={
+                'link_doctype': 'Customer',
+                'link_name': customer_name
+            },
+            fields=['parent'],
+            ignore_permissions=True
+        )
+        for contact in linked_contacts:
+            # Get the contact name from the result
+            contact_name = linked_contacts[0]['parent']
+            if frappe.db.exists("Contact", contact_name):
+                try:
+                    contact_doc = frappe.get_doc('Contact', contact_name)
+                    return contact_doc
+                except frappe.DoesNotExistError:
+                    frappe.log_error(f"Linked contact '{contact_name}' for customer '{customer_name}' does not exist.", "Missing Contact")
+                    continue  # move to next linked contact
     return None # No valid contact found
+
+
+def get_primary_contact_for_customer(customer_name):
+    """Fetch the primary contact linked directly from the Customer document."""
+    customer_doc = frappe.get_doc("Customer", customer_name)
+
+    if customer_doc.customer_primary_contact:
+        try:
+            return frappe.get_doc("Contact", customer_doc.customer_primary_contact)
+        except frappe.DoesNotExistError:
+            frappe.log_error(
+                f"Primary contact '{customer_doc.customer_primary_contact}' for customer '{customer_name}' does not exist.",
+                "Missing Contact"
+            )
+
+    return None  # No primary contact found
 
 @frappe.whitelist()
 def update_communication_status():
@@ -246,9 +267,14 @@ def build_customer_data_json(campaign):
         query_params.append(campaign.get("store"))
 
     query_params.append(campaign.get("msg_count_per_run"))
+    print("Customer Query: ")
+    print(customer_query)
+    print("msg_count_per_run: ")
+    print(campaign.get("msg_count_per_run"))
     
     customers = frappe.db.sql(customer_query, query_params, as_dict=True)
-
+    print("Cust count from db:")
+    print(len(customers))
     return build_customers_json_for_marketing_campaign(customers)
 
 
