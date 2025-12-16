@@ -75,5 +75,27 @@
   "name": "Eye Camp Outreach",
   "script": "frappe.ui.form.on('Eye Camp Lead', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Send Outreach Msg'), function() {\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link_for_eye_camp_marketing',\n                    args: {\n                        id: frm.doc.name\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
   "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Website Item",
+  "enabled": 1,
+  "modified": "2025-01-23 11:38:28.432091",
+  "module": "Karp Optical",
+  "name": "Website Item Script",
+  "script": "frappe.ui.form.on('Website Item', {\n    refresh: function(frm) {\n        frm.set_query(\"filters\", function() {\n            return {\n                filters: {\n                    fieldname: [\"in\", [\"custom_gender\", \"other_custom_field\"]]\n                }\n            };\n        });\n    }\n});",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Sales Order",
+  "enabled": 1,
+  "modified": "2025-12-16 21:05:54.052912",
+  "module": "Karp Communication",
+  "name": "Welcome Msg",
+  "script": "frappe.ui.form.on('Sales Order', {\n\trefresh(frm) {\n\t\tfrm.add_custom_button(__('Send Welcome Msg'), function() {\n\t\t    \n\t\t    let customer_name = frm.doc.customer;\n            let url;    \n            frappe.call({\n                    method: 'karp_communication.api.whatsapp.get_wa_link',\n                    args: {\n                        customer_name: customer_name,\n                        wa_template_name: 'Welcome Msg',\n                        order_id: frm.doc.name\n                    },\n                    callback: function(response) {\n                        if (response.message) {\n                            url = response.message\n                            window.open(url, '_blank');\n                        }\n                    }\n            })  \n           \n        }, __(\"Actions\"));\n\t}\n})",
+  "view": "Form"
  }
 ]

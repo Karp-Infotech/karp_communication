@@ -6,31 +6,33 @@ import urllib.parse
 #logging.basicConfig(filename='ls-erp/logs/karp_communication.log', level=logging.INFO)
 
 @frappe.whitelist()
-def get_wa_link(customer_name, wa_template_name):
+def get_wa_link(customer_name, wa_template_name,order_id=None,):
 
     wa_url = "https://web.whatsapp.com/send/?type=phone_number&app_absent=0&";    
     contact_doc = get_contact_for_customer(customer_name)
     #logger.info('Gettting WA Message')
     wa_url = wa_url + "phone="+contact_doc.mobile_no
-    message = construct_message(wa_template_name, customer_name, contact_doc)
+    message = construct_message(wa_template_name, customer_name, order_id, contact_doc)
     wa_url = wa_url + "&text=" + message
 
     return wa_url
 
 
 
-def construct_message(wa_template_name, customer_name, contact_doc):
+def construct_message(wa_template_name, customer_name, order_id, contact_doc):
 
     wa_template = frappe.get_doc("WA Template", {"name": wa_template_name})
 
-    context = build_context(wa_template_name, customer_name, contact_doc)
+    context = build_context(wa_template_name, customer_name, order_id, contact_doc)
+
+
 
     message = urllib.parse.quote(frappe.render_template(wa_template.message_template, context))
 
     return message
 
-def build_context(wa_template_name, customer_name, contact_doc):
-
+def build_context(wa_template_name, customer_name, order_id, contact_doc):
+   
     if(wa_template_name == "Thankyou Msg"):
         loyalty_points = int(get_total_loyalty_points_for_customer(customer_name))
         context = {
@@ -38,7 +40,12 @@ def build_context(wa_template_name, customer_name, contact_doc):
             "loyalty_points": loyalty_points
         }
         return context
-        
+    if(wa_template_name == "Welcome Msg"):
+        context = {
+            "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer",
+            "order_id": order_id
+        }
+        return context
     else: 
         context = {
             "first_name": contact_doc.first_name if (len(contact_doc.first_name) != 0) else "Customer"
